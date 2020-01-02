@@ -10,15 +10,22 @@ import SwiftUI
 
 
 
-struct SevenSegmentDisplay: View {
+public struct SevenSegmentDisplay: View {
     
     @State
-    var color: Color
+    public var color: Color = .red
     
     @State
-    var displayState: DisplayState
+    public var displayState: DisplayState = []
     
-    var body: some View {
+    
+    public init(color: Color, displayState: DisplayState) {
+        self.color = color
+        self.displayState = displayState
+    }
+    
+    
+    public var body: some View {
         GeometryReader { geometry in
             self.segments(in: geometry).drawingGroup()
         }
@@ -99,7 +106,7 @@ private extension SevenSegmentDisplay {
 
 
 
-internal extension SevenSegmentDisplay {
+public extension SevenSegmentDisplay {
     enum Segment: UInt8 {
         case top         = 0b00000001
         case topRight    = 0b00000010

@@ -11,16 +11,22 @@ import RectangleTools
 
 
 
-struct DisplaySegmentView: View {
+public struct DisplaySegmentView: View {
     
     @State
-    var color: Color
+    public var color: Color = .red
     
     @State
-    var kind: Kind
+    public var kind: Kind = .dot
     
     
-    var body: some View {
+    public init(color: Color, kind: Kind) {
+        self.color = color
+        self.kind = kind
+    }
+    
+    
+    public var body: some View {
         GeometryReader { geometry in
             self.path(in: geometry)
                 .fill(self.color)
@@ -31,7 +37,7 @@ struct DisplaySegmentView: View {
 
 
 
-internal extension DisplaySegmentView {
+public extension DisplaySegmentView {
     enum Kind {
         case vertical
         case horizontal
