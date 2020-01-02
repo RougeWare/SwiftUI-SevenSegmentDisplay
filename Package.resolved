@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "MultiplicativeArithmetic",
+        "repositoryURL": "https://github.com/RougeWare/Swift-MultiplicativeArithmetic.git",
+        "state": {
+          "branch": null,
+          "revision": "71e7201b4debe94fe7dca6f10d6b34c487f991b2",
+          "version": "1.2.0"
+        }
+      },
+      {
+        "package": "RectangleTools",
+        "repositoryURL": "https://github.com/RougeWare/Swift-Rectangle-Tools.git",
+        "state": {
+          "branch": null,
+          "revision": "6361d7875c55cd735dae76e7e17fbd4e65481e4f",
+          "version": "2.3.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
