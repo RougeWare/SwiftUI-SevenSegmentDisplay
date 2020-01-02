@@ -34,6 +34,32 @@ public struct SevenSegmentDisplay: View {
 
 
 
+public extension SevenSegmentDisplay {
+    /// Creates a new seven-segment display, whose display state resembles the given character. If the character can't
+    /// be represented on a 7-segment display, `nil` is returned.
+    ///
+    /// - Parameters:
+    ///   - character: The character which would be approximated on the display.
+    ///   - color:     _optional_ - The color of the resulting display. Defaults to `.red`
+    init?(resembling character: Character, color: Color = .red) {
+        guard let state = SevenSegmentDisplay.DisplayState(resembling: character) else {
+            return nil
+        }
+        
+        self.init(color: color, displayState: state)
+    }
+    
+    
+    /// Creates a blank seven-segment display
+    ///
+    /// - Parameter color: _optional_ - The color of the segments in the blank display. Defaults to `.red`
+    static func blank(color: Color = .red) -> Self {
+        self.init(color: color, displayState: [])
+    }
+}
+
+
+
 private extension SevenSegmentDisplay {
     func segments(in geometry: GeometryProxy) -> some View {
         Group {
@@ -357,7 +383,7 @@ struct SevenSegmentDisplay_Previews: PreviewProvider {
     
     
     static func preview(resembling character: Character) -> some View {
-        SevenSegmentDisplay(color: .red, displayState: SevenSegmentDisplay.DisplayState(resembling: character) ?? [])
+        (SevenSegmentDisplay(resembling: character) ?? .blank())
             .frame(width: 9 * 4, height: 16 * 4, alignment: .center)
     }
 }
