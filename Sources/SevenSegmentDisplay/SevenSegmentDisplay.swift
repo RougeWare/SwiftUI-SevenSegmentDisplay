@@ -215,7 +215,7 @@ internal extension SevenSegmentDisplay.Segment {
 
 
 
-internal extension SevenSegmentDisplay.DisplayState {
+public extension SevenSegmentDisplay.DisplayState {
     
     
     private static let characterEncodings: [Character : Self] = [
@@ -321,6 +321,10 @@ internal extension SevenSegmentDisplay.DisplayState {
         return copy
     }
 }
+
+
+
+extension SevenSegmentDisplay.DisplayState: Hashable {}
 
 
 
