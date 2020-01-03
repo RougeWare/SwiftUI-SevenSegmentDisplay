@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SafePointer
+import RectangleTools
 
 
 
@@ -28,8 +29,9 @@ public struct SevenSegmentDisplay: View {
     
     public var body: some View {
         GeometryReader { geometry in
-            self.segments(in: geometry).drawingGroup()
+            self.segments(in: geometry)
         }
+        .drawingGroup()
     }
 }
 
@@ -77,11 +79,10 @@ private extension SevenSegmentDisplay {
     
     
     func positionedSegmentView(_ segment: Segment, geometry: GeometryProxy) -> some View {
-        let framePercent = percentSize(for: segment)
-        let positionPercent = percentCenter(for: segment)
+        let frame = self.frame(for: segment, inGeometryOfSize: geometry.size)
         return unpositionedSegmentView(segment)
-            .position(percentX: positionPercent.x, percentY: positionPercent.y, in: geometry)
-            .frame(percentWidth: framePercent.width, percentHeight: framePercent.height, in: geometry)
+            .position(x: frame.x, y: frame.y)
+            .frame(width: frame.width, height: frame.height)
     }
     
     
@@ -100,34 +101,41 @@ private extension SevenSegmentDisplay {
     }
     
     
-    func percentSize(for segment: Segment) -> CGSize {
-        switch segment.kind {
-        case .horizontal:
-            return CGSize(width: 0.75, height: 0.1)
-            
-        case .vertical:
-            return CGSize(width: 0.1, height: 0.45)
-            
-        case .dot:
-            return CGSize(width: 0.1, height: 0.1)
-        }
-    }
-    
-    
-    func percentCenter(for segment: Segment) -> CGPoint {
-        switch segment {
-        case .top: return CGPoint(x: 0.425, y: 0.05)
-        case .center: return CGPoint(x: 0.425, y: 0.5)
-        case .bottom: return CGPoint(x: 0.425, y: 0.95)
-            
-        case .topRight: return CGPoint(x: 0.8, y: 0.275)
-        case .bottomRight: return CGPoint(x: 0.8, y: 0.725)
-            
-        case .topLeft: return CGPoint(x: 0.05, y: 0.275)
-        case .bottomLeft: return CGPoint(x: 0.05, y: 0.725)
-            
-        case .period: return CGPoint(x: 0.95, y: 0.95)
-        }
+    func frame(for segment: Segment, inGeometryOfSize parentSize: CGSize) -> CGRect {
+        let minMeasurement = min(parentSize.measurementX, parentSize.measurementY)
+        let thin = max(1, minMeasurement * 0.1)
+        let halfThin = thin / 2
+        
+        let segmentSize: CGSize = {
+            switch segment.kind {
+            case .horizontal:
+                return CGSize(width: parentSize.width - (thin * 2.5), height: thin)
+                
+            case .vertical:
+                return CGSize(width: thin, height: (parentSize.height - thin) / 2)
+                
+            case .dot:
+                return CGSize(width: thin, height: thin)
+            }
+        }()
+        
+        let segmentOrigin: CGPoint = {
+            switch segment {
+            case .top: return CGPoint(x: (segmentSize.width / 2) + halfThin, y: halfThin)
+            case .center: return CGPoint(x: (segmentSize.width / 2) + halfThin, y: parentSize.height / 2)
+            case .bottom: return CGPoint(x: (segmentSize.width / 2) + halfThin, y: parentSize.height - halfThin)
+                
+            case .topRight: return CGPoint(x: parentSize.width - (thin * 2), y: ((parentSize.height - thin) / 4) + halfThin)
+            case .bottomRight: return CGPoint(x: parentSize.width - (thin * 2), y: ((parentSize.height - thin) * (3 / 4)) + halfThin)
+                
+            case .topLeft: return CGPoint(x: halfThin, y: ((parentSize.height - thin) / 4) + halfThin)
+            case .bottomLeft: return CGPoint(x: halfThin, y: ((parentSize.height - thin) * (3 / 4)) + halfThin)
+                
+            case .period: return CGPoint(x: parentSize.maxX - halfThin, y: parentSize.maxY - halfThin)
+            }
+        }()
+        
+        return CGRect(origin: segmentOrigin, size: segmentSize)
     }
 }
 

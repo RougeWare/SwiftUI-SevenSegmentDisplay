@@ -66,26 +66,34 @@ private extension DisplaySegmentView {
     
     
     private func verticalSegmentPath(in localFrame: CGRect) -> Path {
-        Path { path in
+        
+        let minSideLength = min(localFrame.width, localFrame.height)
+        let halfMinSideLength = minSideLength / 2
+        
+        return Path { path in
             path.move(to: localFrame.midXmaxY)
-            path.addLine(to: localFrame.maxX(yPercent: 0.9))
-            path.addLine(to: localFrame.maxX(yPercent: 0.1))
+            path.addLine(to: .init(x: localFrame.maxX, y: localFrame.maxY - halfMinSideLength))
+            path.addLine(to: .init(x: localFrame.maxX, y: halfMinSideLength))
             path.addLine(to: localFrame.midXminY)
-            path.addLine(to: localFrame.minX(yPercent: 0.1))
-            path.addLine(to: localFrame.minX(yPercent: 0.9))
+            path.addLine(to: .init(x: localFrame.minX, y: halfMinSideLength))
+            path.addLine(to: .init(x: localFrame.minX, y: localFrame.maxY - halfMinSideLength))
             path.closeSubpath()
         }
     }
     
     
     private func horizontalSegmentPath(in localFrame: CGRect) -> Path {
-        Path { path in
+        
+        let minSideLength = min(localFrame.width, localFrame.height)
+        let halfMinSideLength = minSideLength / 2
+        
+        return Path { path in
             path.move(to: localFrame.maxXmidY)
-            path.addLine(to: localFrame.maxY(xPercent: 0.9))
-            path.addLine(to: localFrame.maxY(xPercent: 0.1))
+            path.addLine(to: .init(x: localFrame.maxX - halfMinSideLength, y: localFrame.maxY))
+            path.addLine(to: .init(x: halfMinSideLength, y: localFrame.maxY))
             path.addLine(to: localFrame.minXmidY)
-            path.addLine(to: localFrame.minY(xPercent: 0.1))
-            path.addLine(to: localFrame.minY(xPercent: 0.9))
+            path.addLine(to: .init(x: halfMinSideLength, y: localFrame.minY))
+            path.addLine(to: .init(x: localFrame.maxX - halfMinSideLength, y: localFrame.minY))
             path.closeSubpath()
         }
     }
