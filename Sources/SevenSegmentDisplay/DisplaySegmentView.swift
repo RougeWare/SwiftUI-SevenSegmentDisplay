@@ -8,15 +8,16 @@
 
 import SwiftUI
 import RectangleTools
+import SafePointer
 
 
 
 public struct DisplaySegmentView: View {
     
-    @State
+    @MutableSafePointer
     public var color: Color = .red
     
-    @State
+    @MutableSafePointer
     public var kind: Kind = .dot
     
     

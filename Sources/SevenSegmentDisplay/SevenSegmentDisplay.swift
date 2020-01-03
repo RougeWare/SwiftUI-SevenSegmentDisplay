@@ -7,15 +7,16 @@
 //
 
 import SwiftUI
+import SafePointer
 
 
 
 public struct SevenSegmentDisplay: View {
     
-    @State
+    @MutableSafePointer
     public var color: Color = .red
     
-    @State
+    @MutableSafePointer
     public var displayState: DisplayState = []
     
     
@@ -153,7 +154,9 @@ public extension SevenSegmentDisplay {
     
     struct DisplayState: OptionSet {
         
-        public var rawValue: Segment.RawValue
+        public typealias RawValue = Segment.RawValue
+        
+        public var rawValue: RawValue
         
         public init(rawValue: RawValue) {
             self.rawValue = rawValue
@@ -377,7 +380,7 @@ struct SevenSegmentDisplay_Previews: PreviewProvider {
     
     static let digitCharacters = [Character]("0123456789")
     
-    static let lowerCaseLatinLetterCharacters = [Character]("abcdefghijklmnopqrstufwxyz")
+    static let lowerCaseLatinLetterCharacters = [Character]("abcdefghijklmnopqrstuvwxyz")
     
     static let upperCaseLatinLetterCharacters = [Character]("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
     
