@@ -21,9 +21,11 @@ public struct SevenSegmentReadout: View {
     
     
     public var body: some View {
-        HStack {
-            ForEach(states, id: \.self) { state in
-                SevenSegmentDisplay(color: self.color, displayState: state)
+        GeometryReader { geometry in
+            HStack(spacing: self.displaySpacing(in: geometry)) {
+                ForEach(self.states, id: \.self) { state in
+                    SevenSegmentDisplay(color: self.color, displayState: state)
+                }
             }
         }
         .drawingGroup()
@@ -41,6 +43,18 @@ public extension SevenSegmentReadout {
         self.init(color: color, states: sequence.map { character in
             SevenSegmentDisplay.DisplayState(resembling: character) ?? []
         })
+    }
+}
+
+
+
+private extension SevenSegmentReadout {
+    func displaySpacing(in geometry: GeometryProxy) -> CGFloat {
+        guard states.count > 1 else {
+            return 0
+        }
+        
+        return (geometry.size.width / 20) / CGFloat(states.count - 1)
     }
 }
 
