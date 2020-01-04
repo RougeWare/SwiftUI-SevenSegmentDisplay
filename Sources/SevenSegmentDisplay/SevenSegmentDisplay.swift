@@ -12,6 +12,7 @@ import RectangleTools
 
 
 
+/// Seven display segments placed together to be a 7-segment display. And a period.
 public struct SevenSegmentDisplay: View {
     
     @MutableSafePointer
@@ -293,6 +294,10 @@ public extension SevenSegmentDisplay.DisplayState {
         "z" : [.top, .topRight, .center, .bottomLeft, .bottom],
         
         " " : [],
+        "-" : [.center],
+        "_" : [.bottom],
+        "=" : [.center, .bottom],
+        "'" : [.topRight],
     ]
     
     
