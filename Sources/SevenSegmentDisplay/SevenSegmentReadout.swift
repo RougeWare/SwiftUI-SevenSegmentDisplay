@@ -11,6 +11,7 @@ import SafePointer
 
 
 
+/// A readout is a series of displays strung together horizontally
 public struct SevenSegmentReadout: View {
     
     @MutableSafePointer
@@ -35,6 +36,11 @@ public struct SevenSegmentReadout: View {
 
 
 public extension SevenSegmentReadout {
+    /// Creates a new readout consisting of a series of displays which, together, resemble the given text
+    ///
+    /// - Parameters:
+    ///   - sequence: The text to display
+    ///   - color:    The color of each segment
     init<CharSequence>(resembling sequence: CharSequence, color: Color = .red)
         where
             CharSequence: Sequence,
@@ -43,6 +49,28 @@ public extension SevenSegmentReadout {
         self.init(color: color, states: sequence.map { character in
             SevenSegmentDisplay.DisplayState(resembling: character) ?? []
         })
+    }
+    
+    
+    /// Sets the aspect ratio of this readout based on the number of characters it contains
+    ///
+    /// - Parameter ratio: The aspect ratio of each character in this readout
+    func eachCharacterAspectRatio(_ ratio: CGFloat) -> some View {
+        if states.isEmpty {
+            return aspectRatio(ratio, contentMode: .fit)
+        }
+        else {
+            return aspectRatio(ratio * CGFloat(states.count), contentMode: .fit)
+        }
+    }
+    
+    
+    /// Sets the aspect ratio of this readout based on the number of characters it contains
+    ///
+    /// - Parameter ratio: The aspect ratio of each character in this readout
+    @inlinable
+    func eachCharacterAspectRatio(_ ratio: CGSize) -> some View {
+        eachCharacterAspectRatio(ratio.width / ratio.height)
     }
 }
 
