@@ -21,6 +21,9 @@ public struct SevenSegmentDisplay: View {
     @MutableSafePointer
     public var displayState: DisplayState = []
     
+    /// The skew to apply to this display
+    public var skew: Skew = .none
+    
     
     public init(color: Color, displayState: DisplayState) {
         self.color = color
@@ -32,6 +35,7 @@ public struct SevenSegmentDisplay: View {
         GeometryReader { geometry in
             self.segments(in: geometry)
         }
+        .transformEffect(CGAffineTransform(a: 1, b: 0, c: skew.cgAffineTransformCValue, d: 1, tx: 0, ty: 0))
         .drawingGroup()
     }
 }
@@ -45,12 +49,13 @@ public extension SevenSegmentDisplay {
     /// - Parameters:
     ///   - character: The character which would be approximated on the display.
     ///   - color:     _optional_ - The color of the resulting display. Defaults to `.red`
-    init?(resembling character: Character, color: Color = .red) {
+    ///   - skew:      The skew to apply to this display
+    init?(resembling character: Character, color: Color = .red, skew: Skew = .none) {
         guard let state = SevenSegmentDisplay.DisplayState(resembling: character) else {
             return nil
         }
         
-        self.init(color: color, displayState: state)
+        self.init(color: color, displayState: state, skew: skew)
     }
     
     
@@ -59,6 +64,34 @@ public extension SevenSegmentDisplay {
     /// - Parameter color: _optional_ - The color of the segments in the blank display. Defaults to `.red`
     static func blank(color: Color = .red) -> Self {
         self.init(color: color, displayState: [])
+    }
+    
+    
+    
+    /// The skew to apply to a 7-segment display
+    enum Skew {
+        /// No skew; it's perfectly orthogonal
+        case none
+        
+        /// Apply a custom skew to the display.
+        ///
+        /// See also `.traditional`
+        ///
+        /// - Parameter affineTransformCValue: The value to apply to the C component of the affine transform matrix
+        case custom(affineTransformCValue: CGFloat)
+        
+        
+        /// The value to apply to the C component of the affine transform matrix
+        var cgAffineTransformCValue: CGFloat {
+            switch self {
+            case .none: return 0
+            case .custom(let affineTransformCValue): return affineTransformCValue
+            }
+        }
+        
+        
+        /// A good skew to mimic traditional 7-segment displays
+        public static let traditional = Skew.custom(affineTransformCValue: -0.1)
     }
 }
 

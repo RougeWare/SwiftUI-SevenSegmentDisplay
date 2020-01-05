@@ -20,6 +20,9 @@ public struct SevenSegmentReadout: View {
     @MutableSafePointer
     public var states: [SevenSegmentDisplay.DisplayState]
     
+    /// The skew to apply to this readout
+    public var skew: Skew = .none
+    
     
     public var body: some View {
         GeometryReader { geometry in
@@ -29,8 +32,14 @@ public struct SevenSegmentReadout: View {
                 }
             }
         }
+        .transformEffect(CGAffineTransform(a: 1, b: 0, c: skew.cgAffineTransformCValue, d: 1, tx: 0, ty: 0))
         .drawingGroup()
     }
+    
+    
+    
+    /// The skew to apply to a 7-segment readout
+    public typealias Skew = SevenSegmentDisplay.Skew
 }
 
 
@@ -41,14 +50,18 @@ public extension SevenSegmentReadout {
     /// - Parameters:
     ///   - sequence: The text to display
     ///   - color:    The color of each segment
-    init<CharSequence>(resembling sequence: CharSequence, color: Color = .red)
+    ///   - skew:      The skew to apply to this readout
+    init<CharSequence>(resembling sequence: CharSequence, color: Color = .red, skew: Skew = .none)
         where
             CharSequence: Sequence,
             CharSequence.Element == Character
     {
-        self.init(color: color, states: sequence.map { character in
-            SevenSegmentDisplay.DisplayState(resembling: character) ?? []
-        })
+        self.init(
+            color: color,
+            states: sequence.map { character in
+                SevenSegmentDisplay.DisplayState(resembling: character) ?? []
+            },
+            skew: skew)
     }
     
     
