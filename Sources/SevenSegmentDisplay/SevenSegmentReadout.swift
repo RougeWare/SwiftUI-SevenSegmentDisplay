@@ -31,8 +31,9 @@ public struct SevenSegmentReadout: View {
                     SevenSegmentDisplay(color: self.color, displayState: state)
                 }
             }
+            .padding(.horizontal, self.skew.paddingNeededToEnsureFullDisplayIsShown(in: geometry.size))
+            .transformEffect(CGAffineTransform(a: 1, b: 0, c: self.skew.cgAffineTransformCValue, d: 1, tx: 0, ty: 0))
         }
-        .transformEffect(CGAffineTransform(a: 1, b: 0, c: skew.cgAffineTransformCValue, d: 1, tx: 0, ty: 0))
         .drawingGroup()
     }
     
@@ -50,7 +51,7 @@ public extension SevenSegmentReadout {
     /// - Parameters:
     ///   - sequence: The text to display
     ///   - color:    The color of each segment
-    ///   - skew:      The skew to apply to this readout
+    ///   - skew:     The skew to apply to this readout
     init<CharSequence>(resembling sequence: CharSequence, color: Color = .red, skew: Skew = .none)
         where
             CharSequence: Sequence,

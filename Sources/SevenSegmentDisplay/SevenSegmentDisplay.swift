@@ -28,8 +28,9 @@ public struct SevenSegmentDisplay: View {
     public var body: some View {
         GeometryReader { geometry in
             self.segments(in: geometry)
+                .padding(.horizontal, self.skew.paddingNeededToEnsureFullDisplayIsShown(in: geometry.size))
+                .transformEffect(CGAffineTransform(a: 1, b: 0, c: self.skew.cgAffineTransformCValue, d: 1, tx: 0, ty: 0))
         }
-        .transformEffect(CGAffineTransform(a: 1, b: 0, c: skew.cgAffineTransformCValue, d: 1, tx: 0, ty: 0))
         .drawingGroup()
     }
 }
@@ -81,6 +82,11 @@ public extension SevenSegmentDisplay {
             case .none: return 0
             case .custom(let affineTransformCValue): return affineTransformCValue
             }
+        }
+        
+        
+        func paddingNeededToEnsureFullDisplayIsShown(in parentFrameSize: CGSize) -> CGFloat {
+            return abs(cgAffineTransformCValue) * parentFrameSize.width
         }
         
         
