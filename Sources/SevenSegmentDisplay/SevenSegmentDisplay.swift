@@ -25,12 +25,6 @@ public struct SevenSegmentDisplay: View {
     public var skew: Skew = .none
     
     
-    public init(color: Color, displayState: DisplayState) {
-        self.color = color
-        self.displayState = displayState
-    }
-    
-    
     public var body: some View {
         GeometryReader { geometry in
             self.segments(in: geometry)
